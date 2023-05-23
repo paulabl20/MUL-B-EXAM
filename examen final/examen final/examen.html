@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EXAMEN FINAL PAULA</title>
+    <style>
+        html, body{
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #text{
+            position: absolute;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r94/three.min.js"></script>
+    <script src="funciones.js"></script>
+    <script type="module" >
+        import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
+
+        //CREA LA ESCENA Y CAMARA
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0x000000, 1.0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        var size = 700;
+        var arrowSize = 40;
+        var divisions = 20;
+        var origin = new THREE.Vector3(0, 0, 0);
+        var x = new THREE.Vector3(1, 0, 0);
+        var y = new THREE.Vector3(0, 1, 0);
+        var z = new THREE.Vector3(0, 0, 1);
+        var color2 = new THREE.Color(0x333333);
+        var colorR = new THREE.Color(0xAA0000);
+        var colorG = new THREE.Color(0x00AA00);
+        var colorB = new THREE.Color(0x0000AA);
+
+        //CREA EL ORBIT CONTROL
+        var controls = new OrbitControls(camera, renderer.domElement);
+
+        //GRILLA Y FLECHAS
+        var gridHelperXZ = new THREE.GridHelper(size, divisions, color2, color2);
+        var arrowX = new THREE.ArrowHelper(x, origin, arrowSize, colorR);
+        var arrowY = new THREE.ArrowHelper(y, origin, arrowSize, colorG);
+        var arrowZ = new THREE.ArrowHelper(z, origin, arrowSize, colorB);
+
+        //POSICION DE LA CAMARA
+        camera.position.x = 50;
+        camera.position.y = 50;
+        camera.position.z = 50;
+        camera.lookAt(scene.position);
+        document.body.appendChild(renderer.domElement);
+
+        //AGREGA LOS ELEMENTOS A LA ESCENA
+        scene.add(gridHelperXZ);
+        scene.add(arrowX);
+        scene.add(arrowY);
+        scene.add(arrowZ);
+
+        //POLIEDRO CARACTERISTICAS
+        var lado1 =20;
+        var lado2 = 20;
+        var nlados = 5;
+        var altura = 30;
+        var colores = [
+          0xCC0000,  // Pirámide 1
+          0xCC6600,  // Pirámide 2
+          0x66CC00,  // Pirámide 3
+          0x00FF80,  // Pirámide 4
+          0x0066CC,  // Pirámide 5
+          0x0000CC,  // Pirámide 6
+          0x4C0099,  // Pirámide 7
+          0xFF007F,  // Pirámide 8
+        ];
+        var posicionesPiramides = [
+          [ 0  , 0, 0 ],  // Pirámide 1
+          [ 40 , 0, 0 ],  // Pirámide 2
+          [ 80 , 0, 0 ],  // Pirámide 3
+          [ 120, 0, 0 ],  // Pirámide 4
+          [ 0  , 0, 50],  // Pirámide 5
+          [ 40 , 0, 50],  // Pirámide 6
+          [ 80 , 0, 50],  // Pirámide 7
+          [ 120, 0, 50],  // Pirámide 8
+        ];
+
+        for(var i=0; i<8; i++){
+          var Piramide = Solido(lado1, lado2, nlados, altura, colores[i]);
+          var x = posicionesPiramides[i][0];
+          var y = posicionesPiramides[i][1];
+          var z = posicionesPiramides[i][2];
+          Piramide.position.x = x;
+          Piramide.position.y = y;
+          Piramide.position.z = z;
+          scene.add(Piramide);
+        }
+        function render(){
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+        render();
+    </script>  
+</body>
+</html>
